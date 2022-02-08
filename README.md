@@ -1,2 +1,2 @@
-# split-wise
+# SplitWise
 java mjt project
