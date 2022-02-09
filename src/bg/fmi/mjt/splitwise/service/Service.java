@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -41,15 +40,16 @@ public class Service {
     private final Map<String, String> tokenToUserId = new HashMap<>();
     private final Map<String, String> userIdToToken = new HashMap<>();
 
-    private final Supplier<String> idSupplier = () -> UUID.randomUUID().toString();
-    private final Supplier<String> authTokenSupplier = idSupplier;
+    private final Supplier<String> idSupplier;
+    private final Supplier<String> authTokenSupplier;
 
-    public Service(Dao<User> userDao,
-                   Dao<Group> groupDao,
-                   Dao<Payment> paymentDao) {
+    public Service(Dao<User> userDao, Dao<Group> groupDao, Dao<Payment> paymentDao,
+                   Supplier<String> idSupplier, Supplier<String> authTokenSupplier) {
         this.userDao = userDao;
         this.groupDao = groupDao;
         this.paymentDao = paymentDao;
+        this.idSupplier = idSupplier;
+        this.authTokenSupplier = authTokenSupplier;
     }
 
     public void register(String username, String password) throws ServiceException {

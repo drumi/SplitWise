@@ -4,6 +4,8 @@ import bg.fmi.mjt.splitwise.commands.Command;
 import bg.fmi.mjt.splitwise.commands.creators.CommandCreator;
 import bg.fmi.mjt.splitwise.commands.executors.CommandExecutor;
 
+import java.util.Objects;
+
 public class DefaulClientInputHandler implements InputHander {
 
     private final CommandExecutor executor;
@@ -16,6 +18,8 @@ public class DefaulClientInputHandler implements InputHander {
 
     @Override
     public String handle(String input) {
+        Objects.requireNonNull(input, "input cannot be null");
+
         Command command = creator.create(input);
 
         return executor.execute(command);

@@ -17,28 +17,6 @@ public enum CommandType {
     GET_PAYMENT_HISTORY("get-payment-history", "get-payment-history"),
     HELP("help", "help");
 
-    public static final int ADD_FRIEND_FRIEND_USERNAME_INDEX = 0;
-
-    public static final int CREATE_CROUP_GROUP_NAME_INDEX = 0;
-    public static final  int CREATE_CROUP_USERNAMES_START_INDEX = 1;
-
-    public static final int LOGIN_USERNAME_INDEX = 0;
-    public static final  int LOGIN_PASSWORD_INDEX = 1;
-
-    public static final int REGISTER_USERNAME_INDEX = 0;
-    public static final int REGISTER_PASSWORD_INDEX = 1;
-
-    public static final int PAYED_AMOUNT_INDEX = 0;
-    public static final  int PAYED_FRIEND_USERNAME_INDEX = 1;
-
-    public static final int SPLIT_AMOUNT_INDEX = 0;
-    public static final int SPLIT_FRIEND_USERNAME_INDEX = 1;
-    public static final int SPLIT_REASON_FOR_PAYMENT_INDEX = 2;
-
-    public static final int SPLIT_GROUP_AMOUNT_INDEX = 0;
-    public static final int SPLIT_GROUP_NAME_INDEX = 1;
-    public static final int SPLIT_GROUP_REASON_FOR_PAYMENT_INDEX = 2;
-
     private static final Map<String, CommandType> MAP = new HashMap<>();
 
     private final String name;
@@ -59,12 +37,36 @@ public enum CommandType {
         return MAP.get(token);
     }
 
-    public String getName() {
+    public String cmdName() {
         return name;
     }
 
     public String getUsage() {
         return usage;
+    }
+
+    public static class Indexes {
+        public static final int ADD_FRIEND_FRIEND_USERNAME_INDEX = 0;
+
+        public static final int CREATE_CROUP_GROUP_NAME_INDEX = 0;
+        public static final  int CREATE_CROUP_USERNAMES_START_INDEX = 1;
+
+        public static final int LOGIN_USERNAME_INDEX = 0;
+        public static final  int LOGIN_PASSWORD_INDEX = 1;
+
+        public static final int REGISTER_USERNAME_INDEX = 0;
+        public static final int REGISTER_PASSWORD_INDEX = 1;
+
+        public static final int PAYED_AMOUNT_INDEX = 0;
+        public static final  int PAYED_FRIEND_USERNAME_INDEX = 1;
+
+        public static final int SPLIT_AMOUNT_INDEX = 0;
+        public static final int SPLIT_FRIEND_USERNAME_INDEX = 1;
+        public static final int SPLIT_REASON_FOR_PAYMENT_INDEX = 2;
+
+        public static final int SPLIT_GROUP_AMOUNT_INDEX = 0;
+        public static final int SPLIT_GROUP_NAME_INDEX = 1;
+        public static final int SPLIT_GROUP_REASON_FOR_PAYMENT_INDEX = 2;
     }
 
 }

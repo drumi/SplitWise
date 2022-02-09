@@ -1,5 +1,8 @@
 package bg.fmi.mjt.splitwise.commands;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public final class Command {
 
     private final String owner;
@@ -33,5 +36,43 @@ public final class Command {
 
     public String owner() {
         return owner;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Command command = (Command) o;
+
+        if (!Objects.equals(owner, command.owner)) {
+            return false;
+        }
+        if (!Objects.equals(name, command.name)) {
+            return false;
+        }
+
+        return Arrays.equals(args, command.args);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = owner != null ? owner.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(args);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Command{" +
+            "owner='" + owner + '\'' +
+            ", name='" + name + '\'' +
+            ", args=" + Arrays.toString(args) +
+            '}';
     }
 }

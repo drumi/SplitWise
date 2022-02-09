@@ -46,8 +46,12 @@ public final class Payment implements Identifiable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Payment payment = (Payment) o;
 
@@ -57,5 +61,16 @@ public final class Payment implements Identifiable {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+            "id='" + id + '\'' +
+            ", fromId='" + fromId + '\'' +
+            ", toId='" + toId + '\'' +
+            ", levs=" + levs +
+            ", datePayed=" + datePayed +
+            '}';
     }
 }

@@ -31,11 +31,11 @@ public class DefaultCommandValidator implements CommandValidator {
 
         CommandType cmdType = CommandType.fromString(cmd.name());
 
-        if (cmdType == null) {
+        if (cmdType == null || cmd.args() == null) {
             return false;
         }
 
-        for (var arg :cmd.args()) {
+        for (var arg : cmd.args()) {
             if (arg == null || arg.isBlank()) {
                 return false;
             }

@@ -14,6 +14,8 @@ import com.google.gson.GsonBuilder;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ServerStarter {
 
@@ -32,7 +34,10 @@ public class ServerStarter {
         var groupDao = new FileDao<>(PATH_TO_GROUP_DB, Group.class);
         var paymentDao = new FileDao<>(PATH_TO_PAYMENT_DB, GSON, Payment.class);
 
-        var service = new Service(userDao, groupDao, paymentDao);
+        Supplier<String> idSupplier = () -> UUID.randomUUID().toString();
+        Supplier<String> authTokenSupplier = () -> UUID.randomUUID().toString();
+
+        var service = new Service(userDao, groupDao, paymentDao, idSupplier, authTokenSupplier);
 
         var validator = new DefaultCommandValidator();
 

@@ -144,20 +144,7 @@ public final class User implements Identifiable {
         return username;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
-
-        return username.equals(user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return username.hashCode();
-    }
 
     public String username() {
         return username;
@@ -188,15 +175,34 @@ public final class User implements Identifiable {
     }
 
     @Override
-    public String toString() {
-        return "User[" +
-            "username=" + username + ", " +
-            "password=" + password + ", " +
-            "friendIds=" + friendIds + ", " +
-            "groupNames=" + groupNames + ", " +
-            "paymentIds=" + paymentIds + ", " +
-            "unreadNotifications=" + unreadNotifications + ", " +
-            "friendsIdsToLevsOwed=" + friendsIdsToLevsOwed + ']';
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        User user = (User) o;
+
+        return username.equals(user.username);
     }
 
+    @Override
+    public int hashCode() {
+        return username.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", friendIds=" + friendIds +
+            ", groupNames=" + groupNames +
+            ", paymentIds=" + paymentIds +
+            ", unreadNotifications=" + unreadNotifications +
+            ", friendsIdsToLevsOwed=" + friendsIdsToLevsOwed +
+            '}';
+    }
 }

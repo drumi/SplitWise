@@ -3,6 +3,7 @@ package bg.fmi.mjt.splitwise.commands.creators;
 import bg.fmi.mjt.splitwise.commands.Command;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class DefaultCommandCreator implements CommandCreator {
 
@@ -11,6 +12,8 @@ public class DefaultCommandCreator implements CommandCreator {
 
     @Override
     public Command create(String input) {
+        Objects.requireNonNull(input, "input cannot be null");
+
         var tokens = Arrays.stream(input.trim().split(IGNORE_QUOTED_SPLIT_REGEX))
                            .map(s -> s.replace("\"", "").trim())
                            .toArray(String[]::new);

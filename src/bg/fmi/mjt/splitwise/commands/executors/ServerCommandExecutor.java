@@ -3,6 +3,7 @@ package bg.fmi.mjt.splitwise.commands.executors;
 import bg.fmi.mjt.splitwise.commands.Command;
 import bg.fmi.mjt.splitwise.commands.CommandType;
 import bg.fmi.mjt.splitwise.commands.validators.CommandValidator;
+import bg.fmi.mjt.splitwise.gson.adapters.LocalDateTimeAdapter;
 import bg.fmi.mjt.splitwise.logger.Level;
 import bg.fmi.mjt.splitwise.logger.Logger;
 import bg.fmi.mjt.splitwise.logger.LoggerFactory;
@@ -14,7 +15,9 @@ import bg.fmi.mjt.splitwise.responses.PaymentHistoryResponse;
 import bg.fmi.mjt.splitwise.service.Service;
 import bg.fmi.mjt.splitwise.service.exceptions.ServiceException;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,23 +25,26 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static bg.fmi.mjt.splitwise.commands.CommandType.ADD_FRIEND_FRIEND_USERNAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.CREATE_CROUP_GROUP_NAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.CREATE_CROUP_USERNAMES_START_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.LOGIN_PASSWORD_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.LOGIN_USERNAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.PAYED_AMOUNT_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.PAYED_FRIEND_USERNAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.REGISTER_PASSWORD_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.REGISTER_USERNAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.SPLIT_AMOUNT_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.SPLIT_FRIEND_USERNAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.SPLIT_GROUP_AMOUNT_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.SPLIT_GROUP_NAME_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.SPLIT_GROUP_REASON_FOR_PAYMENT_INDEX;
-import static bg.fmi.mjt.splitwise.commands.CommandType.SPLIT_REASON_FOR_PAYMENT_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.ADD_FRIEND_FRIEND_USERNAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.CREATE_CROUP_GROUP_NAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.CREATE_CROUP_USERNAMES_START_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.LOGIN_PASSWORD_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.LOGIN_USERNAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.PAYED_AMOUNT_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.PAYED_FRIEND_USERNAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.REGISTER_PASSWORD_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.REGISTER_USERNAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.SPLIT_AMOUNT_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.SPLIT_FRIEND_USERNAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.SPLIT_GROUP_AMOUNT_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.SPLIT_GROUP_NAME_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.SPLIT_GROUP_REASON_FOR_PAYMENT_INDEX;
+import static bg.fmi.mjt.splitwise.commands.CommandType.Indexes.SPLIT_REASON_FOR_PAYMENT_INDEX;
 
 public class ServerCommandExecutor implements CommandExecutor {
+
+    private static final Gson GSON =
+        new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 
     private static final String LOGGER_DEBUG_COMMAND_FORMAT = "Executing \"%s\" command...";
     private static final Logger LOGGER = LoggerFactory.getLogger(ServerCommandExecutor.class);
@@ -54,7 +60,6 @@ public class ServerCommandExecutor implements CommandExecutor {
     private final CommandValidator validator;
     private final Service service;
 
-    private final Gson gson = new Gson();
 
     public ServerCommandExecutor(CommandValidator validator, Service service) {
         this.validator = validator;
@@ -84,7 +89,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             case SPLIT -> split(cmd);
             case SPLIT_GROUP -> splitGroup(cmd);
             case GET_PAYMENT_HISTORY -> getPaymentHistory(cmd);
-            case HELP -> INVALID_COMMAND_RESPONSE;
+            default -> INVALID_COMMAND_RESPONSE;
         };
     }
 
@@ -97,7 +102,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             service.addFriend(cmd.owner(), friendUsername);
             return SUCCESSFUL_COMMAND_RESPONSE;
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -116,7 +121,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             );
             return SUCCESSFUL_COMMAND_RESPONSE;
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -126,11 +131,11 @@ public class ServerCommandExecutor implements CommandExecutor {
         try {
             Map<String, Double> debts = service.getStatus(cmd.owner());
 
-            String data = gson.toJson(new OwesResponse(debts));
+            String data = GSON.toJson(new OwesResponse(debts));
 
-            return gson.toJson(CommandResponse.ofSuccess(data));
+            return GSON.toJson(CommandResponse.ofSuccess(data));
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -147,11 +152,11 @@ public class ServerCommandExecutor implements CommandExecutor {
 
             List<String> notifications = service.getAndDeleteNotifications(authToken);
 
-            var data = gson.toJson(new LoginSuccessResponse(authToken, notifications));
+            var data = GSON.toJson(new LoginSuccessResponse(authToken, notifications));
 
-            return gson.toJson(CommandResponse.ofSuccess(data));
+            return GSON.toJson(CommandResponse.ofSuccess(data));
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -172,7 +177,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             service.payed(cmd.owner(), friendUsername, amount);
             return SUCCESSFUL_COMMAND_RESPONSE;
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -186,7 +191,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             service.register(username, password);
             return SUCCESSFUL_COMMAND_RESPONSE;
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -206,7 +211,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             );
             return SUCCESSFUL_COMMAND_RESPONSE;
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -226,7 +231,7 @@ public class ServerCommandExecutor implements CommandExecutor {
             );
             return SUCCESSFUL_COMMAND_RESPONSE;
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
@@ -241,11 +246,11 @@ public class ServerCommandExecutor implements CommandExecutor {
                         .map(payment -> new Payment(payment.toId(), payment.levs(), payment.datePayed()))
                         .toList();
 
-            var data = gson.toJson(new PaymentHistoryResponse(responsePayments));
+            var data = GSON.toJson(new PaymentHistoryResponse(responsePayments));
 
-            return gson.toJson(CommandResponse.ofSuccess(data));
+            return GSON.toJson(CommandResponse.ofSuccess(data));
         } catch (ServiceException e) {
-            return gson.toJson(CommandResponse.ofError(e.getMessage()));
+            return GSON.toJson(CommandResponse.ofError(e.getMessage()));
         }
     }
 
