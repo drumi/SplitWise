@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public final class LoggerFactory {
 
-    private static final Path PATH_TO_LOGS = Paths.get(".", "logs");
+    private static final Path PATH_TO_LOGS = Paths.get("logs");
     private static final Level MIN_LOG_LEVEL = Level.DEBUG;
     private static final Map<Class<?>, Logger> LOGGERS = new HashMap<>();
 

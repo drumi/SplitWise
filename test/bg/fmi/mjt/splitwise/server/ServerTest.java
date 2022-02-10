@@ -3,6 +3,7 @@ package bg.fmi.mjt.splitwise.server;
 import bg.fmi.mjt.splitwise.handlers.InputHander;
 import bg.fmi.mjt.splitwise.logger.Logger;
 import bg.fmi.mjt.splitwise.logger.LoggerFactory;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
@@ -39,7 +41,12 @@ class ServerTest {
 
     @BeforeAll
     static void setUp() {
-        loggerMock.when(() -> LoggerFactory.getLogger(ArgumentMatchers.any())).thenReturn(mock(Logger.class));
+        loggerMock.when(() -> LoggerFactory.getLogger(any())).thenReturn(mock(Logger.class));
+    }
+
+    @AfterAll
+    static void afterAll() {
+        loggerMock.close();
     }
 
     @Test

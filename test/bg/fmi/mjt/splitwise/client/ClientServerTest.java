@@ -43,10 +43,10 @@ class ClientServerTest {
         var socket = new ServerSocket();
         socket.bind(new InetSocketAddress(HOST, PORT));
 
+        var clientServer = new ClientServer(HOST, PORT);
         assertTimeoutPreemptively(
             Duration.ofSeconds(10),
             () -> {
-                var clientServer = new ClientServer(HOST, PORT);
                 clientServer.connect();
 
                 var clientConnection = socket.accept();
