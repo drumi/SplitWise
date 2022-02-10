@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ class DefaultLogger implements Logger, Closeable {
 
     private final LoggerOptions options;
 
-    private PrintWriter writer;
+    private final PrintWriter writer;
 
     public DefaultLogger(LoggerOptions options) {
         this.options = options;
@@ -54,7 +53,7 @@ class DefaultLogger implements Logger, Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         writer.close();
     }
 }

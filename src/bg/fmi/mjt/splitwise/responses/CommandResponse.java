@@ -2,9 +2,9 @@ package bg.fmi.mjt.splitwise.responses;
 
 public class CommandResponse {
 
-    private boolean wasSuccessful;
-    private String errorMessage;
-    private String data;
+    private final boolean wasSuccessful;
+    private final String errorMessage;
+    private final String data;
 
     public static CommandResponse ofError(String message) {
         return new CommandResponse(false, message, null);

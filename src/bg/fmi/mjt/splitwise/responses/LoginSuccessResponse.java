@@ -4,8 +4,8 @@ import java.util.List;
 
 public class LoginSuccessResponse {
 
-    private String authToken;
-    private List<String> notifications;
+    private final String authToken;
+    private final List<String> notifications;
 
     public LoginSuccessResponse(String authToken, List<String> notifications) {
         this.authToken = authToken;

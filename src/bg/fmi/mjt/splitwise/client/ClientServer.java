@@ -3,7 +3,6 @@ package bg.fmi.mjt.splitwise.client;
 import bg.fmi.mjt.splitwise.logger.Level;
 import bg.fmi.mjt.splitwise.logger.Logger;
 import bg.fmi.mjt.splitwise.logger.LoggerFactory;
-import bg.fmi.mjt.splitwise.server.Server;
 
 import java.io.Closeable;
 import java.io.IOException;

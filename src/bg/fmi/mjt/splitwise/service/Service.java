@@ -28,7 +28,7 @@ public class Service {
 
     private static final String FRIEND_ADD_TEMPLATE_MSG = "%s added you as friend!";
     private static final String GROUP_ADD_TEMPLATE_MSG = "%s added you to group %s!";
-    private static final String OWE_TEMPLATE_MSG = "%s made a payment and you owe %.2f levs. Reason: %s";
+    private static final String OWE_TEMPLATE_MSG = "%s made a payment for which you owe %.2f levs. Reason: %s";
     private static final String PAYMENT_APPROVAL_TEMPLATE_MSG = "%s approved your payment of amount: %.2f levs";
 
     private static final int MIN_GROUP_SIZE = 3;
@@ -253,6 +253,14 @@ public class Service {
         var id = idTokenAuthFilter(token);
         var user = userDao.find(id);
         var friend = userDao.find(friendUsernameThatPayed);
+
+        if (user.equals(friend)) {
+            throw new InvalidOperationException("You cannot pay yourself");
+        }
+
+        if (!user.friendIds().contains(friend.id())) {
+            throw new InvalidOperationException("Only friends can pay you");
+        }
 
         String paymentId = idSupplier.get();
         paymentDao.insert(Payment.of(paymentId, friend.id(), user.id(), amountInLevs, LocalDateTime.now()));
