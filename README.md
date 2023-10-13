@@ -18,4 +18,4 @@ Client-server console application that tracks debts between different entities
 ```
 
 ## Example
-![](https://github.com/drumi/drumi/blob/main/splitwise.gif)
+![](https://github.com/drumi/drumi/blob/main/images/splitwise.gif)
